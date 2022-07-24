@@ -1,0 +1,334 @@
+# Torre-de-Pizza-Grupo-5
+Repositorio de codigo para las API
+// Registro de usuarios de la tabla clientes
+app.post("/id_Cliente", (req, res) => {
+    try {
+        const {  nom_Cliente,tel_Cliente , dir_Cliente } = req.body;
+        var conteoExistencia = `call ins_SERVICIO_A_DOMICILIO('${nom_Cliente}','${tel_Cliente}','${dir_Cliente}')`;
+        conn.query(conteoExistencia, (error, results) => {
+            if (error) throw error;
+            if (results.length > 0) {
+                if (results[0][0].numero_usuario > 0) {
+                    res.send(`El cliente ${nom_Cliente} ya existe, ingrese nuevo Cliente`);
+                }
+                else {
+                    const consulta = `call ins_SERVICIO_A_DOMICILIO('${nom_Cliente}','${tel_Cliente}',${dir_Cliente})`;
+                    conn.query(consulta, (error, nuevo_usuario) => {
+                        if (error) throw error;
+                        if (nuevo_usuario.length > 0) {
+                            res.json(nuevo_usuario[0]);
+                        }
+                    });
+                }
+            }  
+        })
+    } catch (error) {
+        res.send("0");
+    }
+   
+});
+
+// consultar usuarios  de la tabla cliente
+app.post("/", (req, res) => {
+    try {
+      const { nom_Cliente,tel_Cliente , dir_Cliente } = req.body;
+      const consulta = `call ins_SERVICIO_A_DOMICILIO('${nom_Cliente}',${tel_Cliente},${dir_Cliente})`;
+      conn.query(consulta, (error, results) => {
+          if (error) throw error;
+          if (results.length > 0) {
+              res.json(results);
+              console.log(results[0][0].Usuario);
+          }  
+      })
+    } catch (error) {
+      res.send("0")
+    }
+  
+  });
+
+  //  actualizar datos de la tabla clientes
+app.put('/id_Cliente', (req, res) => {
+    try {
+        const { nom_Cliente,tel_Cliente , dir_Cliente  } = req.body;
+        const consulta = `call 	act_SERVICIO_A_DOMICILIO(${nom_Cliente},'${tel_Cliente}','${dir_Cliente})`;
+    
+        conn.query(consulta, error => {
+            if (error) throw error;
+            res.send("1");
+        }); 
+    } catch (error) {
+        res.send("0");
+    }
+    
+});
+
+// seleccionar  usuario por nombre del cliente
+app.get("/id_Cliente", (req, res) => {
+    try {
+     const { nom_Cliente,tel_Cliente , dir_Cliente  } = req.body;
+     const consulta = `call sel_SERVICIO_A_DOMICILIO('${nom_Cliente}',${tel_Cliente},${dir_Cliente})`;
+     conn.query(consulta, (error, results) => {
+         if (error) throw error;
+         if (results.length > 0) {
+             res.json(results[0]);
+         } else {
+             res.send("0")
+         }
+     })
+    } catch (error) {
+     res.send("0")
+    }
+ });
+
+
+
+
+// Registro de usuarios de la tabla orden productos
+ app.post("/orden_Producto", (req, res) => {
+    try {
+        const {  Orden_Productos,dir_entrega, cant_producto ,tipo_producto, precio_producto} = req.body;
+        var conteoExistencia = `call ins_SERVICIO_A_DOMICILIO('${Orden_Productos}','${dir_entrega}','${cant_producto}','${tipo_producto}','${precio_producto}');`;
+        conn.query(conteoExistencia, (error, results) => {
+            if (error) throw error;
+            if (results.length > 0) {
+                if (results[0][0].numero_usuario > 0) {
+                    res.send(`la orden de producto ${Orden_Productos} ya existe, ingrese nuevo producto`);
+                }
+                else {
+                    const consulta = `call ins_SERVICIO_A_DOMICILIO(''${Orden_Productos}','${dir_entrega}','${cant_producto}','${tipo_producto}','${precio_producto}');`;               
+                    conn.query(consulta, (error, nuevo_usuario) => {
+                        if (error) throw error;
+                        if (nuevo_usuario.length > 0) {
+                            res.json(nuevo_usuario[0]);
+                        }
+                    });
+                }
+            }  
+        })
+    } catch (error) {
+        res.send("0");
+    }
+   
+});
+
+
+// consultar usuarios  de la orden producto
+app.post("/", (req, res) => {
+    try {
+      const {  Orden_Productos,dir_entrega, cant_producto ,tipo_producto, precio_producto } = req.body;
+      const consulta = `call ins_SERVICIO_A_DOMICILIO('${Orden_Productos}','${dir_entrega}','${cant_producto}','${tipo_producto}','${precio_producto}');`;
+      conn.query(consulta, (error, results) => {
+          if (error) throw error;
+          if (results.length > 0) {
+              res.json(results);
+              console.log(results[0][0].Usuario);
+          }  
+      })
+    } catch (error) {
+      res.send("0")
+    }
+  
+  });
+
+      //  actualizar datos de la orden productos
+app.put('/Orden_Producto', (req, res) => {
+    try {
+        const { Orden_Productos, tipo_producto,cant_producto, dir_entrega , precio_producto } = req.body;
+        const consulta = `call 	act_SERVICIO_A_DOMICILIO('${Orden_Productos}','${dir_entrega}','${cant_producto}','${tipo_producto}','${precio_producto}');`;
+    
+        conn.query(consulta, error => {
+            if (error) throw error;
+            res.send("1");
+        }); 
+    } catch (error) {
+        res.send("0");
+    }
+    
+});
+
+// seleccionar  usuario por orden producto
+app.get("/orden_producto", (req, res) => {
+    try {
+     const { Orden_Productos, tipo_producto,cant_producto, dir_entrega , precio_producto  } = req.body;
+     const consulta = `call sel_SERVICIO_A_DOMICILIO('${Orden_Productos}','${dir_entrega}','${cant_producto}','${tipo_producto}','${precio_producto}');`;
+     conn.query(consulta, (error, results) => {
+         if (error) throw error;
+         if (results.length > 0) {
+             res.json(results[0]);
+         } else {
+             res.send("0")
+         }
+     })
+    } catch (error) {
+     res.send("0")
+    }
+ });
+
+
+
+
+
+ // Registro de usuarios de la tabla vehiculos
+app.post("/cod_Vehiculos", (req, res) => {
+    try {
+        const {  nom_conductor_vehiculo,fec_salida , fac_entrega,calificacion } = req.body;
+        var conteoExistencia = `call ins_SERVICIO_A_DOMICILIO('${nom_conductor_vehiculo}','${fec_salida}','${fac_entrega}','${calificacion})`;
+        conn.query(conteoExistencia, (error, results) => {
+            if (error) throw error;
+            if (results.length > 0) {
+                if (results[0][0].numero_usuario > 0) {
+                    res.send(`El conductor del vehiculo ${nom_conductor_vehiculo} ya existe, ingrese nuevo `);
+                }
+                else {
+                    const consulta = `call ins_SERVICIO_A_DOMICILIO('${nom_conductor_vehiculo}','${fec_salida}','${fac_entrega}','${calificacion})`;
+                    conn.query(consulta, (error, nuevo_usuario) => {
+                        if (error) throw error;
+                        if (nuevo_usuario.length > 0) {
+                            res.json(nuevo_usuario[0]);
+                        }
+                    });
+                }
+            }  
+        })
+    } catch (error) {
+        res.send("0");
+    }
+   
+});
+
+// consultar usuarios  de la tabla vehiculos
+app.post("/", (req, res) => {
+    try {
+      const { nom_conductor_vehiculo,fec_salida ,fac_entrega,calificacion } = req.body;
+      const consulta = `call ins_SERVICIO_A_DOMICILIO('${nom_conductor_vehiculo}','${fec_salida}','${fac_entrega}','${calificacion})`;
+      conn.query(consulta, (error, results) => {
+          if (error) throw error;
+          if (results.length > 0) {
+              res.json(results);
+              console.log(results[0][0].Usuario);
+          }  
+      })
+    } catch (error) {
+      res.send("0")
+    }
+  
+  });
+
+  //  actualizar datos de la tabla vehiculos
+app.put('/cod_Vehiculos', (req, res) => {
+    try {
+        const { nom_conductor_vehiculo,fec_salida ,fac_entrega,calificacion } = req.body;
+        const consulta = `call 	act_SERVICIO_A_DOMICILIO('${nom_conductor_vehiculo}','${fec_salida}','${fac_entrega}','${calificacion})`;
+    
+        conn.query(consulta, error => {
+            if (error) throw error;
+            res.send("1");
+        }); 
+    } catch (error) {
+        res.send("0");
+    }
+    
+});
+
+// seleccionar  usuario por el codigo del vehiculo
+app.get("/cod_vehiculo", (req, res) => {
+    try {
+     const { nom_conductor_vehiculo,fec_salida ,fac_entrega,calificacion } = req.body;
+     const consulta = `call sel_SERVICIO_A_DOMICILIO('${nom_conductor_vehiculo}','${fec_salida}','${fac_entrega}','${calificacion})`;
+     conn.query(consulta, (error, results) => {
+         if (error) throw error;
+         if (results.length > 0) {
+             res.json(results[0]);
+         } else {
+             res.send("0")
+         }
+     })
+    } catch (error) {
+     res.send("0")
+    }
+ });
+ 
+
+
+// Registro de usuarios de la tabla formas pago
+app.post("/cod_pago", (req, res) => {
+    try {
+        const {  num_tarjeta,fec_hora_pago} = req.body;
+        var conteoExistencia = `call ins_SERVICIO_A_DOMICILIO('${num_tarjeta}','${fec_hora_pago}');`;
+        conn.query(conteoExistencia, (error, results) => {
+            if (error) throw error;
+            if (results.length > 0) {
+                if (results[0][0].numero_usuario > 0) {
+                    res.send(`el numero de tarjeta ${num_tarjeta} ya existe, ingrese nuevo`);
+                }
+                else {
+                    const consulta = `call ins_SERVICIO_A_DOMICILIO('${num_tarjeta}','${fec_hora_pago}');`;              
+                    conn.query(consulta, (error, nuevo_usuario) => {
+                        if (error) throw error;
+                        if (nuevo_usuario.length > 0) {
+                            res.json(nuevo_usuario[0]);
+                        }
+                    });
+                }
+            }  
+        })
+    } catch (error) {
+        res.send("0");
+    }
+   
+});
+
+
+// consultar usuarios  de la orden producto
+app.post("/", (req, res) => {
+    try {
+      const { num_tarjeta,fec_hora_pago } = req.body;
+      const consulta = `call ins_SERVICIO_A_DOMICILIO('${num_tarjeta}','${fec_hora_pago}');`;
+      conn.query(consulta, (error, results) => {
+          if (error) throw error;
+          if (results.length > 0) {
+              res.json(results);
+              console.log(results[0][0].Usuario);
+          }  
+      })
+    } catch (error) {
+      res.send("0")
+    }
+  
+  });
+
+      //  actualizar datos de la orden productos
+app.put('/cod_pago', (req, res) => {
+    try {
+        const { num_tarjeta,fec_hora_pago } = req.body;
+        const consulta = `call 	act_SERVICIO_A_DOMICILIO('${num_tarjeta}','${fec_hora_pago}');`;
+    
+        conn.query(consulta, error => {
+            if (error) throw error;
+            res.send("1");
+        }); 
+    } catch (error) {
+        res.send("0");
+    }
+    
+});
+
+// seleccionar  usuario por orden producto
+app.get("/cod_pago", (req, res) => {
+    try {
+     const { num_tarjeta,fec_hora_pago  } = req.body;
+     const consulta = `call sel_SERVICIO_A_DOMICILIO('${num_tarjeta}','${fec_hora_pago}');`;
+     conn.query(consulta, (error, results) => {
+         if (error) throw error;
+         if (results.length > 0) {
+             res.json(results[0]);
+         } else {
+             res.send("0")
+         }
+     })
+    } catch (error) {
+     res.send("0")
+    }
+ });
+
+
